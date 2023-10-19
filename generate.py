@@ -28,10 +28,9 @@ class MazeGenerator:
         self.height = height
         self.maze = np.ones((self.height, self.width), dtype=np.float16)
         self.big_maze = np.zeros(
-            (self.height * CELL_SIZE, self.width * CELL_SIZE), dtype=np.float16
+            ((self.height - 2) * CELL_SIZE, (self.width - 2) * CELL_SIZE),
+            dtype=np.float16,
         )
-
-        self.big_maze = self.big_maze * 255.0
 
         self._generate()
 
@@ -55,18 +54,18 @@ class MazeGenerator:
 
         self.maze[1, 2] = 1
         self.maze[self.height - 2, self.width - 3] = 1
+        self.maze = self.maze[1 : self.height - 1, 1 : self.width - 1]
 
-        for i in range(self.height):
-            for j in range(self.width):
+        for i in range(self.height - 2):
+            for j in range(self.width - 2):
                 if self.maze[i, j] == 1:
                     self.big_maze[
                         i * CELL_SIZE : (i + 1) * CELL_SIZE,
                         j * CELL_SIZE : (j + 1) * CELL_SIZE,
-                    ] = 255
+                    ] = 1
 
         self.maze = self.maze * 255.0
-        self.maze = self.big_maze * 255.0
-        self.maze = self.maze[1 : self.height - 1, 1 : self.width - 1]
+        self.big_maze = self.big_maze * 255.0
 
         return
 
@@ -114,4 +113,4 @@ class MazeGenerator:
         cv2.imwrite(path, self.big_maze)
 
     def get_maze(self):
-        return self.maze
+        return self.big_maze
