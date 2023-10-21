@@ -3,9 +3,9 @@ from enum import Enum
 import numpy as np
 import cv2
 import sys
-from constants import CELL_SIZE
+from constants import CELL_SIZE, RECURSION_LIMIT
 
-sys.setrecursionlimit(8000)
+sys.setrecursionlimit(RECURSION_LIMIT)
 
 
 class Directions(Enum):
@@ -113,4 +113,4 @@ class MazeGenerator:
         cv2.imwrite(path, self.big_maze)
 
     def get_maze(self):
-        return self.big_maze
+        return np.uint8(self.big_maze)
