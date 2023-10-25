@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-opencv-python = "~=4.8"
 numpy = "~=1.26"
 streamlit = "~=1.27"
+opencv-python-headless = "*"
 
 [dev-packages]
 icecream = "*"
