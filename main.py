@@ -85,10 +85,10 @@ with tab_solve:
 
     c10, c11 = st.columns(2)
     with c10:
-        st.text("First pass")
+        st.text("First Contour")
         st.image(solution.contour1)
     with c11:
-        st.text("Second pass")
+        st.text("Second Contour")
         st.image(solution.contour2)
 
     st.text("2. Morphological Closing:")
