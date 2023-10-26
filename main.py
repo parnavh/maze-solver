@@ -71,7 +71,7 @@ with tab_solve:
     with c8:
         st.download_button(
             "Download Solved Maze",
-            data=cv2.imencode(".png", solution.res)[1].tobytes(),
+            data=cv2.imencode(".png", solution.save)[1].tobytes(),
             file_name="solved.png",
             mime="image/png",
             use_container_width=True,

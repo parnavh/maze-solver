@@ -20,11 +20,9 @@ class MazeSolver:
 
         contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
-        self.contour1 = cv2.drawContours(thresh, contours, 0, (255, 255, 255), 30)
+        self.contour1 = cv2.drawContours(self._maze.copy(), contours, 0, 255, 30)
 
-        self.contour2 = cv2.drawContours(
-            self.contour1.copy(), contours, 1, (0, 0, 0), 30
-        )
+        self.contour2 = cv2.drawContours(self._maze.copy(), contours, 1, 0, 30)
 
         kernel = cv2.getStructuringElement(cv2.MORPH_OPEN, ksize=(20, 20))
 
@@ -41,6 +39,7 @@ class MazeSolver:
         b = cv2.bitwise_and(b, b, mask=self.mask)
 
         self.res = cv2.merge((self._maze, g, b))
+        self.save = cv2.merge((g, b, self._maze))
 
     def save_image(self, path: str):
         cv2.imwrite(path, self.res)
