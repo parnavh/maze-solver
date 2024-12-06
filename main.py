@@ -2,6 +2,7 @@ import streamlit as st
 from generate import MazeGenerator
 from solve import MazeSolver
 import cv2
+from time import sleep
 
 
 # Setup App
@@ -32,7 +33,9 @@ if "width" not in st.session_state:
 # Main App
 st.title("Maze Solver")
 
-tab_generate, tab_solve = st.tabs(["Generate Maze", "Solve Maze"])
+tab_generate, tab_solve, tab_snapshots = st.tabs(
+    ["Generate Maze", "Solve Maze", "Maze Generation Visualizer"]
+)
 
 
 # Generate Maze
@@ -111,3 +114,20 @@ with tab_solve:
 
     st.text("4. Final Result:")
     st.image(solution.res)
+
+with tab_snapshots:
+    with st.spinner("Loading maze generation snapshots..."):
+        progress_images = maze.get_progress()
+
+    @st.fragment
+    def slideshow():
+        with st.empty():
+            for i in range(len(progress_images)):
+                st.image(progress_images[i])
+                sleep(0.1)
+
+        c21, c22, c23 = st.columns(3)
+        with c22:
+            st.button(label="Rerun", use_container_width=True)
+
+    slideshow()

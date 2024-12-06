@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 import sys
 from constants import CELL_SIZE, RECURSION_LIMIT
+from copy import deepcopy
 
 sys.setrecursionlimit(RECURSION_LIMIT)
 
@@ -31,6 +32,8 @@ class MazeGenerator:
             ((self.height - 2) * CELL_SIZE, (self.width - 2) * CELL_SIZE),
             dtype=np.float16,
         )
+        self.collections = []
+        self.images = []
 
         self._generate()
 
@@ -71,6 +74,7 @@ class MazeGenerator:
 
     def _backtrack(self, cx, cy, grid):
         grid[cy, cx] = 0.5
+        self.collections.append(deepcopy(grid))
 
         if (
             grid[cy - 2, cx] == 0.5
@@ -114,3 +118,32 @@ class MazeGenerator:
 
     def get_maze(self):
         return np.uint8(self.big_maze)
+
+    def get_progress(self):
+        for maze in self.collections:
+            for i in range(self.height):
+                for j in range(self.width):
+                    if maze[i, j] == 0.5:
+                        maze[i, j] = 1
+            maze[1, 2] = 1
+            maze[self.height - 2, self.width - 3] = 1
+            maze = maze[1 : self.height - 1, 1 : self.width - 1]
+
+            temp = np.zeros(
+                ((self.height - 2) * CELL_SIZE, (self.width - 2) * CELL_SIZE),
+                dtype=np.float16,
+            )
+
+            for i in range(self.height - 2):
+                for j in range(self.width - 2):
+                    if maze[i, j] == 1:
+                        temp[
+                            i * CELL_SIZE : (i + 1) * CELL_SIZE,
+                            j * CELL_SIZE : (j + 1) * CELL_SIZE,
+                        ] = 1
+
+            maze = maze * 255.0
+            temp = temp * 255.0
+            self.images.append(np.uint8(temp))
+
+        return self.images
